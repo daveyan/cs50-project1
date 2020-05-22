@@ -1,0 +1,18 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+
+{% endblock %}
+{% block heading %}
+    error
+{% endblock %}
+
+{% block body %}
+
+    {{error}}
+    <form action="{{ url_for('index') }}" method="get">
+        <button>Home</button>
+    </form>
+
+{% endblock %}
