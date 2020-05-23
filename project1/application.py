@@ -10,6 +10,13 @@ from utils_sql import create_password_table
 
 from utils.user_utils import password_compare
 from utils.user_utils import unique_user
+from utils.user_utils import insert_user
+from utils.user_utils import find_by_username
+
+from utils.password_utils import insert_password
+from utils.password_utils import get_password
+
+from classes.user import User
 
 app = Flask(__name__)
 
@@ -37,6 +44,42 @@ def index():
 def register():
     return render_template("register.html")
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+@app.route("/login/success", methods=["POST"])
+def login_attempt():
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if ((not len(username)) or (not len(password))):
+        return error_found("A field is empty")
+    
+    #find user
+    user = find_by_username(db, username)
+    if user is None:
+         return error_found("Failed to login a ")
+    
+    #user is found
+    found_password = get_password(db, user.id)
+    
+    if password is None:
+        return error_found("Failed to login b")
+
+    #password is found
+    success = password_compare(password, found_password.password)
+
+    if success:
+        session["id"] = user.id
+        val = session["id"]
+        return render_template("welcome.html",username = user.username, firstname = user.firstname, lastname = user.lastname, sessionid = val)
+    else: 
+        return error_found("Failed to login c")
+
+
+
 @app.route("/register/submit", methods=["POST"])
 def register_submit():
 
@@ -61,6 +104,10 @@ def register_submit():
     if valid_password is False:
         return error_found("Passwords are not identical")
 
+    user = User(username, firstname, lastname)
+
+    create_user(db, user, password)
+
     return render_template("submit.html", 
     username=username, 
     firstname=firstname,
@@ -68,3 +115,15 @@ def register_submit():
 
 def error_found(message):
     return render_template("error.html", error=message)
+
+def create_user(db, new_user, password):
+    try:
+        insert_user(db, new_user)
+        user = find_by_username(db, new_user.username)
+        insert_password(db, user.id, password)
+    except Exception:
+        print("ERROR CREATING USER")
+
+
+    
+

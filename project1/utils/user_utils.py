@@ -14,3 +14,7 @@ def unique_user(db,name):
         return False
     else:
         return True
+
+def insert_user(db, user):
+    db.execute("INSERT INTO users (username, firstname, lastname) VALUES (:username, :firstname, :lastname)",{"username": user.username, "firstname":user.firstname, "lastname": user.lastname})
+    db.commit()

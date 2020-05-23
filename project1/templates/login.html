@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+{% endblock %}
+{% block heading %}
+    First Page
+{% endblock %}
+
+{% block body %}
+    
+    <form action="{{ url_for('login_attempt') }}" method="post">
+        <input type="text" name="username" placeholder="username"><br>
+        <input type="password" name="password" placeholder="password"><br>
+        <button>Login</button>
+    </form>
+{% endblock %}

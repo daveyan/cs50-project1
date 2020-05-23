@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 
 {% block title %}
@@ -9,6 +8,9 @@
 {% endblock %}
 
 {% block body %}
+    <form action="{{ url_for('login') }}" method="get">
+        <button>Login</button>
+    </form>
     <form action="{{ url_for('register') }}" method="get">
         <button>Register</button>
     </form>
