@@ -1,10 +1,10 @@
 import csv
 import os
 
-from utils_import import drop_db
-from utils_import import create_db
-from utils_import import batch_insert_db
-from utils_import import check_db
+from utils.import_utils import drop_db
+from utils.import_utils import create_db
+from utils.import_utils import batch_insert_db
+from utils.import_utils import check_db
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker

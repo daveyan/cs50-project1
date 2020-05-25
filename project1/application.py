@@ -5,14 +5,13 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from utils_sql import create_user_table
-from utils_sql import create_password_table
-
-from utils.user_utils import password_compare
+from utils.user_utils import create_user_table
 from utils.user_utils import unique_user
 from utils.user_utils import insert_user
 from utils.user_utils import find_by_username
 
+from utils.password_utils import create_password_table
+from utils.password_utils import password_compare
 from utils.password_utils import insert_password
 from utils.password_utils import get_password
 
@@ -60,13 +59,13 @@ def login_attempt():
     #find user
     user = find_by_username(db, username)
     if user is None:
-         return error_found("Failed to login a ")
+         return error_found("Failed to login")
     
     #user is found
     found_password = get_password(db, user.id)
     
     if password is None:
-        return error_found("Failed to login b")
+        return error_found("Failed to login")
 
     #password is found
     success = password_compare(password, found_password.password)
@@ -76,7 +75,7 @@ def login_attempt():
         val = session["id"]
         return render_template("welcome.html",username = user.username, firstname = user.firstname, lastname = user.lastname, sessionid = val)
     else: 
-        return error_found("Failed to login c")
+        return error_found("Failed to login")
 
 
 
