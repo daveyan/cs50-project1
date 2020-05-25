@@ -8,10 +8,22 @@
 {% endblock %}
 
 {% block body %}
-
+    <div>
+        <p>
+            {% if session %}   
+            <p>session id: {{session}}</p>
+            {% else %}
+            <p>session id: None</p>
+            {%endif %}
+        </p>
+    </div>
     {{username}}
     {{firstname}}
     {{lastname}}
     {{sessionid}}
+
+    <form action="{{ url_for('logout') }}" method="post">
+        <button>Log out</button>
+    </form> 
 
 {% endblock %}

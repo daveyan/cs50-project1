@@ -37,7 +37,8 @@ db = scoped_session(sessionmaker(bind=engine))
 def index():
     create_user_table(db)
     create_password_table(db)
-    return render_template("index.html")
+    session_id = get_session()
+    return render_template("index.html", session=session_id)
 
 @app.route("/register")
 def register():
@@ -45,7 +46,14 @@ def register():
 
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    session_id = get_session()
+    return render_template("login.html", session=session_id)
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.pop('id')
+    session_id = get_session()
+    return render_template("index.html", session=session_id)
 
 @app.route("/login/success", methods=["POST"])
 def login_attempt():
@@ -73,7 +81,8 @@ def login_attempt():
     if success:
         session["id"] = user.id
         val = session["id"]
-        return render_template("welcome.html",username = user.username, firstname = user.firstname, lastname = user.lastname, sessionid = val)
+        print(f'val: {val}')
+        return render_template("welcome.html",username = user.username, firstname = user.firstname, lastname = user.lastname, sessionid = val, session=session['id'])
     else: 
         return error_found("Failed to login")
 
@@ -123,6 +132,16 @@ def create_user(db, new_user, password):
     except Exception:
         print("ERROR CREATING USER")
 
+def get_session():
+    if 'id' in session:
+        print('FOUND')
+        return session['id']
+    else:
+        return None
+    #try:
+    #    return session['id']
+    #except KeyError:
+    #    print('key was popped. return none')
+    #    return None
 
-    
 
